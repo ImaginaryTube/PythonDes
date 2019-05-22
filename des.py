@@ -21,11 +21,11 @@ def InitalPermutation(plainblock):
                 61, 53, 45, 37, 29, 21, 13, 5,
                 63, 55, 47, 39, 31, 23, 15, 7)
 
-    print("Plain Text Block:\t\t"+plainblock)
+    #print("Plain Text Block:\t\t"+plainblock)
     for position in iptable:
         permblock.append(plainblock[position-1])
     permblock = ''.join(permblock)
-    print("Permutated Plain Text Block:\t"+permblock)
+    #print("Permutated Plain Text Block:\t"+permblock)
     return permblock
 
 def EncryptionRounds(permblock):
@@ -33,8 +33,8 @@ def EncryptionRounds(permblock):
     roundnumber = 1
     while roundnumber <= 16:
         print("Round: ", roundnumber)
-        print("The Left bits:\t\t",Leftbits)
-        print("The Right bits:\t\t",Rightbits)
+        #print("The Left bits:\t\t",Leftbits)
+        #print("The Right bits:\t\t",Rightbits)
         rbtemp = Rightbits
         Rightbits = int(Leftbits, 2) ^ int(Ffunction(Rightbits), 2)
         Rightbits = format(Rightbits, '032b')
@@ -121,7 +121,8 @@ def Ffunction(rightbits):
     print("ffunctionoutput output:\t", ffunctionoutput)
     return ffunctionoutput
     
-def Initalkeypermutaion(key):
+def keyfunc(key):
+    print("input key", key)
     ikpermtable = [57, 49, 41, 33, 25, 17, 9,
                     1, 58, 50, 42, 34, 26, 18,
                     10, 2, 59, 51, 43, 35, 27,
@@ -134,12 +135,13 @@ def Initalkeypermutaion(key):
     for position in ikpermtable:
         keyperm.append(key[position-1])
 
+    leftkey, rightkey = keyperm[28:], keyperm[:28]
     
-        
+
 if __name__ == '__main__':
     plaintextfile = open('plain.txt', 'r')
     plaintextbits = ''.join(format(ord(char), 'b') for char in plaintextfile.read())
-    print("Plaintext in bits: "+plaintextbits+"\n")
+    #print("Plaintext in bits: "+plaintextbits+"\n")
     bitlengthcheck = len(plaintextbits) % 64
 
     if bitlengthcheck != 0:

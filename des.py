@@ -10,40 +10,21 @@ def FinalPermutation(encyptedblock):
                 34, 2, 42, 10, 50, 18, 58, 26,
                 33, 1, 41, 9, 49, 17, 57, 25)
 
-def InitalPermutation(plainblock):
-    permblock = []
-    iptable = (58, 50, 42, 34, 26, 18, 10, 2,
-                60, 52, 44, 36, 28, 20, 12, 4,
-                62, 54, 46, 38, 30, 22, 14, 6,
-                64, 56, 48, 40, 32, 24, 16, 8,
-                57, 49, 41, 33, 25, 17, 9, 1,
-                59, 51, 43, 35, 27, 19, 11, 3,
-                61, 53, 45, 37, 29, 21, 13, 5,
-                63, 55, 47, 39, 31, 23, 15, 7)
-
-    #print("Plain Text Block:\t\t"+plainblock)
-    for position in iptable:
-        permblock.append(plainblock[position-1])
-    permblock = ''.join(permblock)
-    #print("Permutated Plain Text Block:\t"+permblock)
-    return permblock
-
 def EncryptionRounds(permblock):
     Leftbits, Rightbits = permblock[:32], permblock[32:]
     roundnumber = 1
     while roundnumber <= 16:
         print("Round: ", roundnumber)
-        #print("The Left bits:\t\t",Leftbits)
-        #print("The Right bits:\t\t",Rightbits)
+        print("The Left bits:\t\t",Leftbits)
+        print("The Right bits:\t\t",Rightbits)
         rbtemp = Rightbits
         Rightbits = int(Leftbits, 2) ^ int(Ffunction(Rightbits), 2)
         Rightbits = format(Rightbits, '032b')
         Leftbits = rbtemp
         roundnumber += 1
         
-def Expansion(rbits):
-    eperm = []
-    etable = (32, 1, 2, 3, 4, 5,
+def Ffunction(rightbits):
+    ExpansionTable = (32, 1, 2, 3, 4, 5,
         4, 5, 6, 7, 8, 9,
         8, 9, 10, 11, 12, 13,
         12, 13, 14, 15, 16, 17,
@@ -51,13 +32,7 @@ def Expansion(rbits):
         20, 21, 22, 23, 24, 25,
         24, 25, 26, 27, 28, 29,
         28, 29, 30, 31, 32, 1)
-    
-    for position in etable:
-        eperm.append(rbits[position-1])
-    eperm = ''.join(eperm)
-    return eperm
-   
-def Ffunction(rightbits):
+
     sbox = [[[14, 4, 13, 1, 2, 15, 11, 8, 3, 10, 6, 12, 5, 9, 0, 7],
             [0, 15, 7, 4, 14, 2, 13, 1, 10, 6, 12, 11, 9, 5, 3, 8],
             [4, 1, 14, 8, 13, 6, 2, 11, 15, 12, 9, 7, 3, 10, 5, 0],
@@ -98,8 +73,9 @@ def Ffunction(rightbits):
             [7, 11, 4, 1, 9, 12, 14, 2, 0, 6, 10, 13, 15, 3, 5, 8],
             [2, 1, 14, 7, 4, 10, 8, 13, 15, 12, 9, 0, 3, 5, 6, 11]]]
 
-    sboxinput = Expansion(rightbits)
-    #print("sbox expansion ", sboxinput)
+    sboxinput = Permutation(ExpansionTable, rightbits)
+
+    print("sbox expansion ", sboxinput)
     sboxinputsplit = [sboxinput[i:i+6] for i in range(0, len(sboxinput), 6)]
     
     sboxnumber = 0
@@ -123,22 +99,35 @@ def Ffunction(rightbits):
     
 def keyfunc(key):
     print("input key", key)
-    ikpermtable = [57, 49, 41, 33, 25, 17, 9,
-                    1, 58, 50, 42, 34, 26, 18,
-                    10, 2, 59, 51, 43, 35, 27,
-                    19, 11, 3, 60, 52, 44, 36,
-                    63, 55, 47, 39, 31, 23, 15,
-                    7, 62, 54, 46, 38, 30, 22,
-                    14, 6, 61, 53, 45, 37, 29,
-                    21, 13, 5, 28, 20, 12, 4]
+    PCTable = [57, 49, 41, 33, 25, 17, 9,
+                1, 58, 50, 42, 34, 26, 18,
+                10, 2, 59, 51, 43, 35, 27,
+                19, 11, 3, 60, 52, 44, 36,
+                63, 55, 47, 39, 31, 23, 15,
+                7, 62, 54, 46, 38, 30, 22,
+                14, 6, 61, 53, 45, 37, 29,
+                21, 13, 5, 28, 20, 12, 4]
                     
-    for position in ikpermtable:
-        keyperm.append(key[position-1])
-
+    keyperm = Permutaion(PCTable, key)
     leftkey, rightkey = keyperm[28:], keyperm[:28]
-    
+
+def Permutation(table, bits):
+    permbits = []
+    for position in table:
+        permbits.append(bits[position-1])
+    permbits = ''.join(permbits)
+    return permbits
 
 if __name__ == '__main__':
+    IPTable = (58, 50, 42, 34, 26, 18, 10, 2,
+                60, 52, 44, 36, 28, 20, 12, 4,
+                62, 54, 46, 38, 30, 22, 14, 6,
+                64, 56, 48, 40, 32, 24, 16, 8,
+                57, 49, 41, 33, 25, 17, 9, 1,
+                59, 51, 43, 35, 27, 19, 11, 3,
+                61, 53, 45, 37, 29, 21, 13, 5,
+                63, 55, 47, 39, 31, 23, 15, 7)
+
     plaintextfile = open('plain.txt', 'r')
     plaintextbits = ''.join(format(ord(char), 'b') for char in plaintextfile.read())
     #print("Plaintext in bits: "+plaintextbits+"\n")
@@ -151,4 +140,4 @@ if __name__ == '__main__':
     plaintextblocks = [plaintextbits[i:i+64] for i in range(0, len(plaintextbits), 64)]
 
     for block in plaintextblocks:
-        EncryptionRounds(InitalPermutation(block))
+        EncryptionRounds(Permutation(IPTable, block))

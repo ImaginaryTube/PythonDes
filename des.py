@@ -15,8 +15,8 @@ def EncryptionRounds(permblock):
     roundnumber = 1
     while roundnumber <= 16:
         print("Round: ", roundnumber)
-        print("The Left bits:\t\t",Leftbits)
-        print("The Right bits:\t\t",Rightbits)
+        #print("The Left bits:\t\t",Leftbits)
+        #print("The Right bits:\t\t",Rightbits)
         rbtemp = Rightbits
         Rightbits = int(Leftbits, 2) ^ int(Ffunction(Rightbits), 2)
         Rightbits = format(Rightbits, '032b')
@@ -75,7 +75,7 @@ def Ffunction(rightbits):
 
     sboxinput = Permutation(ExpansionTable, rightbits)
 
-    print("sbox expansion ", sboxinput)
+    #print("sbox expansion ", sboxinput)
     sboxinputsplit = [sboxinput[i:i+6] for i in range(0, len(sboxinput), 6)]
     
     sboxnumber = 0
@@ -108,7 +108,7 @@ def keyfunc(key):
                 14, 6, 61, 53, 45, 37, 29,
                 21, 13, 5, 28, 20, 12, 4]
                     
-    keyperm = Permutaion(PCTable, key)
+    keyperm = Permutation(PCTable, key)
     leftkey, rightkey = keyperm[28:], keyperm[:28]
 
 def Permutation(table, bits):

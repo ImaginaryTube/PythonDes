@@ -11,8 +11,9 @@ def EncryptionRounds(permblock):
         #print("The Right bits:\t\t",Rightbits)
         Leftbits, Rightbits = Rightbits, format((int(Leftbits, 2) ^ int(Ffunction(Rightbits, roundnumber), 2)), '032b')
         roundnumber += 1
-    final = Permutation(PII, Leftbits+Rightbits)
+    final = Permutation(IPI, Leftbits+Rightbits)
     print("output block:\t\t", final)
+    print()
     return final
         
 def Ffunction(rightbits, rn):
@@ -94,5 +95,5 @@ if __name__ == '__main__':
     cyphertext = []
     for block in plaintextblocks:
         print("input block: \t\t", block)
-        cyphertext.append(EncryptionRounds(Permutation(PI, block)))
+        cyphertext.append(EncryptionRounds(Permutation(IP, block)))
     print(''.join(cyphertext))

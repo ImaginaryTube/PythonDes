@@ -4,13 +4,13 @@ from varibles import *
 
 def EncryptionRounds(permblock, key):
     Leftbits, Rightbits = permblock[:32], permblock[32:]
-    roundnumber = 1
+    roundnumber = 0
     keyfunc(key)
-    while roundnumber <= 16:
-        #print("Round: ", roundnumber)
+    while roundnumber <= 15:
+        #print("Round: ", roundnumber + 1)
         #print("The Left bits:\t\t",Leftbits)
         #print("The Right bits:\t\t",Rightbits)
-        Leftbits, Rightbits = Rightbits, format((int(Leftbits, 2) ^ int(Ffunction(Rightbits, key[roundnumber-1]), 2)), '032b')
+        Leftbits, Rightbits = Rightbits, format((int(Leftbits, 2) ^ int(Ffunction(Rightbits, key[roundnumber]), 2)), '032b')
         roundnumber += 1
     final = Permutation(IPI, Leftbits+Rightbits)
     #print("output block:\t\t", final)
@@ -39,8 +39,7 @@ def Ffunction(rightbits, subkey):
         #print("\tsboxoutput: ", sboxin)
         sboxoutput.append(sboxin)
         sboxnumber += 1
-    ffunctionoutput = ''.join(sboxoutput)
-    ffunctionoutput = Permutation(P, ffunctionoutput)
+    ffunctionoutput = Permutation(P, ''.join(sboxoutput))
     #print("ffunctionoutput output:\t", ffunctionoutput)
     return ffunctionoutput 
 
@@ -72,9 +71,7 @@ def keyfunc(key):
             rightkey.append(rightkey.pop(0))
             #print("leftkey:\t\t {}".format(''.join(leftkey)))
             #print("rightkey:\t\t {}".format(''.join(rightkey)))
-        joinkey = leftkey+rightkey
-        subkey = ''.join(joinkey)
-        subkey = Permutation(PC2, subkey)
+        subkey = Permutation(PC2, ''.join(leftkey+rightkey))
         listofkeys.append(subkey)
         RoundNumber += 1;
     return listofkeys
@@ -83,13 +80,11 @@ def Permutation(table, bits):
     permbits = []
     for position in table:
         permbits.append(bits[position-1])
-    permbits = ''.join(permbits)
-    return permbits
+    return ''.join(permbits)
 
 if __name__ == '__main__':
-    key = '1101001110101110010101001010101110101011010011101010000000000000'
     keytextfile = open('key.txt', 'r')
-       
+    key = bin(int(keytextfile.read(), 16))[2:]
     plaintextfile = open('plain.txt', 'r')
     plaintextbits = ''.join(format(ord(char), 'b') for char in plaintextfile.read())
     #print("Plaintext in bits: "+plaintextbits+"\n")
@@ -102,6 +97,6 @@ if __name__ == '__main__':
     for block in plaintextblocks:
         #print("input block: \t\t", block)
         ciphertext.append(EncryptionRounds(Permutation(IP, block), key))
-    fullciphertext = ''.join(ciphertext)
+    ciphertextfile = ''.join(ciphertext)
     ciphertext = open('cipher.txt', 'w')
-    ciphertext.write(fullciphertext)
+    ciphertext.write(ciphertextfile)

@@ -5,16 +5,15 @@ from varibles import *
 def EncryptionRounds(permblock, key):
     Leftbits, Rightbits = permblock[:32], permblock[32:]
     roundnumber = 0
-    keyfunc(key)
+    KeySchedule(key)
     while roundnumber <= 15:
         #print("Round: ", roundnumber + 1)
         #print("The Left bits:\t\t",Leftbits)
         #print("The Right bits:\t\t",Rightbits)
         Leftbits, Rightbits = Rightbits, format((int(Leftbits, 2) ^ int(Ffunction(Rightbits, key[roundnumber]), 2)), '032b')
         roundnumber += 1
-    final = Permutation(IPI, Leftbits+Rightbits)
+    final = Permutation(IPI, Rightbits+Leftbits)
     #print("output block:\t\t", final)
-    #print()
     return final
         
 def Ffunction(rightbits, subkey):
@@ -43,7 +42,7 @@ def Ffunction(rightbits, subkey):
     #print("ffunctionoutput output:\t", ffunctionoutput)
     return ffunctionoutput 
 
-def keyfunc(key):
+def KeySchedule(key):
     listofkeys = []
     #print("input key:\t\t", key)
     SingleShiftRounds = [1, 2, 9, 16]

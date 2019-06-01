@@ -1,3 +1,6 @@
+cipher.txt
+key.txt
+plain.txt
 test
 __pycache__
 *.pyc

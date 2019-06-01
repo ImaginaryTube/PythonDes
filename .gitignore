@@ -2,5 +2,7 @@ cipher.txt
 key.txt
 plain.txt
 test
+info.log
+nohup.out
 __pycache__
 *.pyc
